@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "644904816218",
+    "project_id": "rent-application-f1f0f",
+    "storage_bucket": "rent-application-f1f0f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:644904816218:android:51143d60ddeb98198d1263",
+        "android_client_info": {
+          "package_name": "com.example.rent_application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "644904816218-srd8i9ggdk6j5cp9cc8qgi46mfvaknp4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6jSAuCk5VFQReC35ZYEgzQmaSXjObOkw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "644904816218-srd8i9ggdk6j5cp9cc8qgi46mfvaknp4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
