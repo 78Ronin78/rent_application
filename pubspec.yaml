@@ -48,7 +48,8 @@ dev_dependencies:
   flutter_native_splash: any
   flutter_launcher_icons: ^0.8.0
   provider: 6.0.3
-  iconswitcher: ^2.0.2
+  shared_preferences: ^2.0.15
+  pinput: 1.2.0
 
   #firebase dependecies
   firebase_core: ^1.17.1

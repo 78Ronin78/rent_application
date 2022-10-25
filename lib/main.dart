@@ -1,49 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rent_application/screens/AuthScreen.dart';
-import 'package:rent_application/theme/nativeTheme.dart';
-import 'package:rent_application/theme/themeChanger.dart';
-import 'package:rent_application/models/global.dart' as global;
+import 'package:rent_application/theme/model_theme.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  MyAppState createState() => MyAppState();
-}
-
-class MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-              create: (context) => ThemeChanger(
-                  nativeTheme(isDarkModeEnable: global.isDarkModeEnable))),
-        ],
-        child: MaterialAppWithTheme(),
-      );
-}
-
-class MaterialAppWithTheme extends StatelessWidget {
-  MaterialAppWithTheme();
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final theme = Provider.of<ThemeChanger>(context);
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Управление гостями',
-      //  navigatorObservers: <NavigatorObserver>[observer],
-      theme: theme.getTheme,
-      //ThemeData.dark(), //
-      home: AuthScreen(),
+    return ChangeNotifierProvider(
+      create: (_) => ModelTheme(),
+      child: Consumer<ModelTheme>(
+          builder: (context, ModelTheme themeNotifier, child) {
+        return MaterialApp(
+          title: 'Flutter Demo',
+          theme: themeNotifier.isDark
+              ? ThemeData(
+                  brightness: Brightness.dark,
+                )
+              : ThemeData(
+                  brightness: Brightness.light,
+                  primaryColor: Colors.blue[700],
+                  primarySwatch: Colors.blue),
+          debugShowCheckedModeBanner: false,
+          home: const AuthScreen(),
+        );
+      }),
     );
   }
 }
