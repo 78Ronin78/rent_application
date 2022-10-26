@@ -1,11 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:rent_application/helpers/helpers.dart';
+import 'package:rent_application/helpers/message_exception.dart';
 import 'package:rent_application/helpers/size_config.dart';
+import 'package:rent_application/repository/firebase_auth.dart';
 import 'package:rent_application/theme/model_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rent_application/widgets/custom_snackBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -15,6 +20,7 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final _auth = FirebaseAuth.instance;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKeyRegister = GlobalKey<FormState>();
@@ -41,6 +47,31 @@ class _AuthScreenState extends State<AuthScreen> {
     setState(() {
       numScreen = value;
     });
+  }
+
+  void _validateAuth() async {
+    final FormState? form = _formKey.currentState;
+    if (_formKey.currentState!.validate()) {
+      helpers.showProgress(
+          context, 'Выполняется вход, пожалуйста подождите', false);
+      form!.save();
+      try {
+        bool result = await fbAuth.auth(_email, _password);
+        if (result) {
+          helpers.hideProgress();
+          print('Document exists on the database');
+          Navigator.pushNamedAndRemoveUntil(
+              context, 'tabNavigator', (Route<dynamic> route) => false);
+        } else {
+          helpers.hideProgress();
+          Navigator.pushNamed(context, 'registrationScreen');
+        }
+      } on MessageException catch (e) {
+        helpers.hideProgress();
+        print(e);
+        CustomSnackBar(context, Text(e.message), Colors.lightGreen);
+      }
+    }
   }
 
   @override
