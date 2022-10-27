@@ -29,6 +29,8 @@ class _AuthScreenState extends State<AuthScreen> {
   String _email = '';
   String _password = '';
   bool _obscurePassword = true;
+  String _verificationID = '';
+  bool codeSumbit = false;
   TextEditingController _phone = TextEditingController();
 
   getPage() {
@@ -74,6 +76,34 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 
+  _phoneAuth() async {
+    print(_phone.text);
+    try {
+      await fbAuth.submitPhoneNumber(
+          phoneNumber: _phone.text,
+          func: (value) {
+            setState(() {
+              _verificationID = value;
+            });
+            if (_verificationID != null) {
+              CustomSnackBar(
+                  context, Text('СМС код был выслан'), Colors.lightGreen);
+              setState(() {
+                codeSumbit = false;
+                numScreen = 4;
+              });
+            }
+          },
+          durationCode: () {
+            setState(() {
+              codeSumbit = true;
+            });
+          });
+    } on MessageException catch (e) {
+      CustomSnackBar(context, Text(e.message), Colors.red);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size.height - 110;
@@ -108,7 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Вход в систему',
+                      Text('Подтвердите ваш номер',
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                       Container(
@@ -117,15 +147,6 @@ class _AuthScreenState extends State<AuthScreen> {
                             right: mediaQuery / 27.62),
                         child: Column(
                           children: [
-                            Container(
-                              height: 50.0.toAdaptive(context),
-                              child: Center(
-                                  child:
-                                      Image.asset("assets/img/logo_text.png")),
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
                             Container(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 15),
@@ -325,7 +346,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20)),
-                  onPressed: () {},
+                  onPressed: () {
+                    _validateAuth();
+                  },
                   child: const Text('Войти'),
                 ),
               ),
@@ -373,10 +396,17 @@ class _AuthScreenState extends State<AuthScreen> {
               SizedBox(
                 height: 15,
               ),
-              TextField(
+              TextFormField(
                 keyboardType: TextInputType.number,
                 inputFormatters: [maskFormatter],
                 controller: _phone,
+                // validator: (value) {
+                //   if (value == null || value.isEmpty) {
+                //     return 'Поле не должно быть пустым';
+                //   } else {
+                //     return null;
+                //   }
+                // },
                 decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFFC5CEE0))),
@@ -394,7 +424,9 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       textStyle: const TextStyle(fontSize: 20)),
-                  onPressed: () {},
+                  onPressed: () {
+                    _phoneAuth();
+                  },
                   child: const Text('Войти'),
                 ),
               ),

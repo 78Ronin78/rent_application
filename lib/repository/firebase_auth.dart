@@ -117,8 +117,9 @@ class FireBaseAuth {
       {required String phone,
       required String smsCode,
       required Function func}) async {
+    print('Номер телефона: $phone');
     await _auth.verifyPhoneNumber(
-      phoneNumber: '+7 963 000-81-02',
+      phoneNumber: phone,
       verificationCompleted: (PhoneAuthCredential credential) async {
         // Авторизация пользователя (или ссылка) с автоматически созданными учетными данными
         // await _auth.signInWithCredential(credential);
