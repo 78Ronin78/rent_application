@@ -1,5 +1,7 @@
 // 1
 import 'package:flutter/material.dart';
+import 'package:rent_application/screens/TabDetailScreen.dart';
+import 'package:rent_application/screens/TabScreen.dart';
 import 'package:rent_application/widgets/tab_item.dart';
 
 class TabNavigatorRoutes {
@@ -17,15 +19,15 @@ class TabNavigator extends StatelessWidget {
   Map<String, WidgetBuilder> _routeBuilders(BuildContext context,
       {int materialIndex: 500}) {
     return {
-      TabNavigatorRoutes.root: (context) => ColorsListPage(
+      TabNavigatorRoutes.root: (context) => TabScreen(
             color: Colors.blue,
-            title: TabHelper.description(tabItem),
+            title: tabItem.name,
             onPush: (materialIndex) =>
                 _push(context, materialIndex: materialIndex),
           ),
-      TabNavigatorRoutes.detail: (context) => ColorDetailPage(
-            color: TabHelper.color(tabItem),
-            title: TabHelper.description(tabItem),
+      TabNavigatorRoutes.detail: (context) => TabDetailScreen(
+            color: Colors.blue,
+            title: tabItem.name,
             materialIndex: materialIndex,
           ),
     };
