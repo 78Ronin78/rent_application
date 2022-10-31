@@ -31,6 +31,8 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _obscurePassword = true;
   String _verificationID = '';
   bool codeSumbit = false;
+  bool codeVerify = true;
+  final _pinPutController = TextEditingController();
   TextEditingController _phone = TextEditingController();
 
   getPage() {
@@ -152,7 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   horizontal: 10, vertical: 15),
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: Theme.of(context).cardColor,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5))),
                               child: Column(
@@ -178,7 +180,26 @@ class _AuthScreenState extends State<AuthScreen> {
                                             MediaQuery.of(context).size.width /
                                                 10),
                                     child: PinPut(
-                                        onSubmit: (value) async {},
+                                        onSubmit: (value) async {
+                                          try {
+                                            bool value =
+                                                await fbAuth.submitCode(
+                                                    code:
+                                                        _pinPutController.text,
+                                                    verificationId:
+                                                        _verificationID,
+                                                    context: context);
+                                            if (!value) {
+                                              setState(() {
+                                                codeVerify = false;
+                                              });
+                                            }
+                                          } on MessageException catch (e) {
+                                            CustomSnackBar(context,
+                                                Text(e.message), Colors.red);
+                                          }
+                                        },
+                                        controller: _pinPutController,
                                         fieldsCount: 6,
                                         fieldsAlignment:
                                             MainAxisAlignment.spaceAround,
@@ -192,6 +213,16 @@ class _AuthScreenState extends State<AuthScreen> {
                                           color:
                                               Color.fromRGBO(197, 206, 224, 1),
                                         )),
+                                  ),
+                                  if (!codeVerify)
+                                    Text('Неверный код',
+                                        style: TextStyle(fontSize: 14)),
+                                  SizedBox(
+                                    height: 74,
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: _phoneAuth,
+                                    child: Text('Отправить повторно'),
                                   ),
                                 ],
                               ),
@@ -400,13 +431,13 @@ class _AuthScreenState extends State<AuthScreen> {
                 keyboardType: TextInputType.number,
                 inputFormatters: [maskFormatter],
                 controller: _phone,
-                // validator: (value) {
-                //   if (value == null || value.isEmpty) {
-                //     return 'Поле не должно быть пустым';
-                //   } else {
-                //     return null;
-                //   }
-                // },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Поле не должно быть пустым';
+                  } else {
+                    return null;
+                  }
+                },
                 decoration: InputDecoration(
                     enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: Color(0xFFC5CEE0))),

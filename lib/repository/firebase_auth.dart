@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rent_application/helpers/firebase_constants.dart';
 import 'package:rent_application/helpers/message_exception.dart';
+import 'package:rent_application/screens/TabNavigator.dart';
 
 //import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 
@@ -103,7 +104,10 @@ class FireBaseAuth {
           verificationId: verificationId, smsCode: code);
       await _auth.signInWithCredential(phoneAuthCredential).then((result) {
         if (_auth.currentUser != null) {
+          print('Отправка кода выполнилась делаем редирект');
           _redirectAuthUser(context!);
+        } else {
+          print('Ничего не делаем');
         }
       });
       return true;
@@ -179,16 +183,21 @@ class FireBaseAuth {
     DocumentSnapshot documentSnapshot =
         await fbFirestore.collection('users').doc(_auth.currentUser!.uid).get();
     var user;
-    // if (documentSnapshot != null && documentSnapshot.exists) {
-    //   user = ProfileModel.fromJson(documentSnapshot.data());
-    //   if (user.name != null) {
-    //     Navigator.pushNamed(context, 'tabNavigator');
-    //   } else {
-    //     Navigator.pushNamed(context, 'registrationScreen');
-    //   }
-    // } else {
-    //   Navigator.pushNamed(context, 'registrationScreen');
-    // }
+    if (documentSnapshot != null && documentSnapshot.exists) {
+      if (user.name != null) {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => TabNavigator()),
+        );
+      } else {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => TabNavigator()),
+        );
+      }
+    } else {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => TabNavigator()),
+      );
+    }
   }
 }
 
