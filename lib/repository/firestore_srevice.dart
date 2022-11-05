@@ -2,7 +2,7 @@ import 'package:rent_application/helpers/firebase_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  static Future<Map<String, dynamic>> getUserById(String uid) async {
+  static Future getUserById(String uid) async {
     DocumentSnapshot doc = await fbFirestore.collection('users').doc(uid).get();
     return doc.data();
   }

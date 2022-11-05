@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:beamer/beamer.dart';
 
 //фоновое прослушивание уведомлений
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -44,10 +45,20 @@ class _MyAppState extends State<MyApp> {
 
   bool isLoadUser = true;
 
+  final routerDelegate = BeamerDelegate(
+    initialPath: '/a',
+    locationBuilder: RoutesLocationBuilder(
+      routes: {
+        '*': (context, state, data) => const ScaffoldWithBottomNavBar(),
+      },
+    ),
+  );
+
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    _initCurrentUser();
   }
 
   Future<void> initPlatformState() async {
@@ -181,8 +192,6 @@ class _MyAppState extends State<MyApp> {
         }
       });
     }
-    // if(auth?.currentUser?.uid?.isNotEmpty ?? false) {
-    // }
   }
 
   @override
@@ -208,22 +217,27 @@ class _MyAppState extends State<MyApp> {
                   if (snapshot.hasError) {
                     print('error');
                   } else {
-                    if (currentUser != null) {
+                    if (currentUser.uid != '') {
                       //Здесь возвращается нижняя панель навигации
-                      return TabNavigator();
-                      //return TabScreen();
+                      return MaterialApp.router(
+                        debugShowCheckedModeBanner: false,
+                        theme: ThemeData(primarySwatch: Colors.indigo),
+                        routerDelegate: routerDelegate,
+                        routeInformationParser: BeamerParser(),
+                        backButtonDispatcher: BeamerBackButtonDispatcher(
+                          delegate: routerDelegate,
+                        ),
+                      );
                     } else if (!isLoadUser) {
-                      return AuthNumberScreen();
+                      return AuthScreen();
                     } else {
-                      return SplashScreenChat();
+                      return Scaffold(
+                        body: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
                     }
-
-                    //return _auth.currentUser != null ? BottomNavigation() : SplashScreenChat();
                   }
-                  // Once complete, show your application
-                  // if (snapshot.connectionState == ConnectionState.done) {
-                  // }
-                  // Otherwise, show something whilst waiting for initialization to complete
                   return Scaffold(
                     body: Center(
                       child: CircularProgressIndicator(),

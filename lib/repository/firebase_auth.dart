@@ -210,8 +210,9 @@ class FireBaseAuth {
 
           'uid': uid, // 42
         })
-        .then((value) => Navigator.pushNamedAndRemoveUntil(
-            context, 'tabNavigator', (Route<dynamic> route) => false))
+        .then((value) => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => TabNavigator()),
+            ))
         .catchError((error) => print("Failed to add user: $error"));
   }
 }
