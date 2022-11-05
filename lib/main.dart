@@ -219,15 +219,27 @@ class _MyAppState extends State<MyApp> {
                   } else {
                     if (currentUser.uid != '') {
                       //Здесь возвращается нижняя панель навигации
-                      return MaterialApp.router(
-                        debugShowCheckedModeBanner: false,
-                        theme: ThemeData(primarySwatch: Colors.indigo),
-                        routerDelegate: routerDelegate,
-                        routeInformationParser: BeamerParser(),
-                        backButtonDispatcher: BeamerBackButtonDispatcher(
-                          delegate: routerDelegate,
-                        ),
-                      );
+                      return ChangeNotifierProvider(
+                          create: (_) => ModelTheme(),
+                          child: Consumer<ModelTheme>(builder:
+                              (context, ModelTheme themeNotifier, child) {
+                            return MaterialApp.router(
+                              debugShowCheckedModeBanner: false,
+                              theme: themeNotifier.isDark
+                                  ? ThemeData(
+                                      brightness: Brightness.dark,
+                                    )
+                                  : ThemeData(
+                                      brightness: Brightness.light,
+                                      primaryColor: Colors.blue[700],
+                                      primarySwatch: Colors.blue),
+                              routerDelegate: routerDelegate,
+                              routeInformationParser: BeamerParser(),
+                              backButtonDispatcher: BeamerBackButtonDispatcher(
+                                delegate: routerDelegate,
+                              ),
+                            );
+                          }));
                     } else if (!isLoadUser) {
                       return AuthScreen();
                     } else {
