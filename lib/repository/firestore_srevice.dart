@@ -22,4 +22,16 @@ class FirestoreService {
       return false;
     }
   }
+
+  static Future<void> addHomePhone(String address, String code) async {
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection('homePhones').doc();
+    ref.set({'id': ref.id, 'address': address, 'code': code});
+  }
+
+  static Future getHomePhones(String id) async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('homePhones').doc(id).get();
+    return doc.data();
+  }
 }

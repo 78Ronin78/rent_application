@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 import 'package:rent_application/screens/DetailScreen.dart';
+import 'package:rent_application/screens/notes/NoteHomePhoneDetailScreen.dart';
+import 'package:rent_application/screens/notes/NotesScreen.dart';
 import 'package:rent_application/screens/RootScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:rent_application/theme/model_theme.dart';
@@ -56,13 +58,18 @@ class ALocation extends BeamLocation<BeamState> {
           key: ValueKey('a'),
           title: 'Tab A',
           type: BeamPageType.noTransition,
-          child: RootScreen(label: 'A', detailsPath: '/a/details'),
+          child: NotesScreen(
+              label: 'A',
+              detailsPath: '/a/details',
+              detailsHomePhonePath: '/a/notedetails/notehomephonedetails'),
         ),
-        if (state.uri.pathSegments.length == 2)
+        if (state.uri.pathSegments.length == 3)
           const BeamPage(
-            key: ValueKey('a/details'),
-            title: 'Details A',
-            child: DetailsScreen(label: 'A'),
+            key: ValueKey('a/notedetails'),
+            title: 'Details Note',
+            child: NoteHomePhoneDetailScreen(
+                label: 'Note',
+                detailsHomePhonePath: '/a/notedetails/notehomephonedetails'),
           ),
       ];
 }
@@ -104,7 +111,7 @@ class CLocation extends BeamLocation<BeamState> {
           type: BeamPageType.noTransition,
           child: RootScreen(label: 'C', detailsPath: '/c/details'),
         ),
-        if (state.uri.pathSegments.length == 3)
+        if (state.uri.pathSegments.length == 2)
           const BeamPage(
             key: ValueKey('c/details'),
             title: 'Details C',
@@ -126,7 +133,7 @@ class DLocation extends BeamLocation<BeamState> {
           type: BeamPageType.noTransition,
           child: RootScreen(label: 'D', detailsPath: '/d/details'),
         ),
-        if (state.uri.pathSegments.length == 4)
+        if (state.uri.pathSegments.length == 2)
           const BeamPage(
             key: ValueKey('d/details'),
             title: 'Details D',
@@ -148,7 +155,7 @@ class ELocation extends BeamLocation<BeamState> {
           type: BeamPageType.noTransition,
           child: RootScreen(label: 'E', detailsPath: '/e/details'),
         ),
-        if (state.uri.pathSegments.length == 5)
+        if (state.uri.pathSegments.length == 2)
           const BeamPage(
             key: ValueKey('e/details'),
             title: 'Details E',
@@ -252,16 +259,29 @@ class _ScaffoldWithBottomNavBarState extends State<ScaffoldWithBottomNavBar> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         currentIndex: _currentIndex,
-        items: const [
+        items: [
           BottomNavigationBarItem(
-              label: 'Section A', icon: Icon(Icons.assignment_outlined)),
+              label: 'Section A',
+              icon: Icon(
+                Icons.assignment_outlined,
+                color: Theme.of(context).unselectedWidgetColor,
+              )),
           BottomNavigationBarItem(
-              label: 'Section B', icon: Icon(Icons.email_outlined)),
+              label: 'Section B',
+              icon: Icon(Icons.email_outlined,
+                  color: Theme.of(context).unselectedWidgetColor)),
           BottomNavigationBarItem(
-              label: 'Section C', icon: Icon(Icons.add_circle_outline)),
+              label: 'Section C',
+              icon: Icon(Icons.add_circle_outline,
+                  color: Theme.of(context).unselectedWidgetColor)),
           BottomNavigationBarItem(
-              label: 'Section D', icon: Icon(Icons.calculate)),
-          BottomNavigationBarItem(label: 'Section E', icon: Icon(Icons.search)),
+              label: 'Section D',
+              icon: Icon(Icons.calculate,
+                  color: Theme.of(context).unselectedWidgetColor)),
+          BottomNavigationBarItem(
+              label: 'Section E',
+              icon: Icon(Icons.search,
+                  color: Theme.of(context).unselectedWidgetColor)),
         ],
         onTap: (index) {
           if (index != _currentIndex) {
