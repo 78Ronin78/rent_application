@@ -11,6 +11,7 @@ class NotesScreen extends StatefulWidget {
       {required this.label,
       required this.detailsPath,
       required this.detailsHomePhonePath,
+      required this.detailsApartmentsPath,
       Key? key})
       : super(key: key);
 
@@ -22,6 +23,9 @@ class NotesScreen extends StatefulWidget {
 
   /// The path to the detail page
   final String detailsHomePhonePath;
+
+  /// The path to the detail page
+  final String detailsApartmentsPath;
 
   @override
   State<NotesScreen> createState() => _NotesScreenState();
@@ -83,8 +87,8 @@ class _NotesScreenState extends State<NotesScreen> {
                   color: Colors.blue,
                   width: MediaQuery.of(context).size.width,
                   child: TextButton(
-                    onPressed: () =>
-                        Beamer.of(context).beamToNamed(widget.detailsPath),
+                    onPressed: () => Beamer.of(context)
+                        .beamToNamed(widget.detailsApartmentsPath),
                     child: const Text('Квартиры',
                         style: TextStyle(color: Colors.white)),
                   ),

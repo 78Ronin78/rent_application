@@ -8,11 +8,11 @@ import 'package:rent_application/screens/notes/AddHomePhoneForm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// The details screen for either the A or B screen.
-class NoteHomePhoneDetailScreen extends StatefulWidget {
+class NoteApartmentsScreen extends StatefulWidget {
   /// Constructs a [NoteDetailScreen].
-  const NoteHomePhoneDetailScreen({
+  const NoteApartmentsScreen({
     required this.label,
-    required this.detailsHomePhonePath,
+    required this.detailsApartmentPath,
     Key? key,
   }) : super(key: key);
 
@@ -20,10 +20,10 @@ class NoteHomePhoneDetailScreen extends StatefulWidget {
   final String label;
 
   /// The path to the detail page
-  final String detailsHomePhonePath;
+  final String detailsApartmentPath;
 
   @override
-  State<StatefulWidget> createState() => NoteHomePhoneDetailScreenState();
+  State<StatefulWidget> createState() => NoteApartmentsScreenState();
 }
 
 //функция преобразования списка снапшотов коллекции в список сообщений
@@ -49,12 +49,12 @@ StreamTransformer<QuerySnapshot<Map<String, dynamic>>, List<HomePhoneModel>>
 });
 
 /// The state for DetailsScreen
-class NoteHomePhoneDetailScreenState extends State<NoteHomePhoneDetailScreen> {
+class NoteApartmentsScreenState extends State<NoteApartmentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Домофоны - Список домофонов'),
+        title: Text('Квартиры - Список квартир'),
       ),
       body: StreamBuilder(
           stream: FirebaseFirestore.instance
