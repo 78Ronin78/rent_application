@@ -1,5 +1,6 @@
 import 'package:rent_application/helpers/firebase_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rent_application/main.dart';
 
 class FirestoreService {
   static Future getUserById(String uid) async {
@@ -33,5 +34,13 @@ class FirestoreService {
     DocumentSnapshot doc =
         await FirebaseFirestore.instance.collection('homePhones').doc(id).get();
     return doc.data();
+  }
+
+  // Добавление фото на модерацию , создание ссылки на фото
+  static Future<void> addPhotoInValid(
+      DateTime date, String url, String appartmentUid) async {
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection('loadPhoto').doc();
+    ref.set({'date': date, 'uid': appartmentUid, 'url': url, 'id': ref.id});
   }
 }

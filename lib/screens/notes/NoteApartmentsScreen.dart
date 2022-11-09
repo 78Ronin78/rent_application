@@ -26,28 +26,6 @@ class NoteApartmentsScreen extends StatefulWidget {
   State<StatefulWidget> createState() => NoteApartmentsScreenState();
 }
 
-//функция преобразования списка снапшотов коллекции в список сообщений
-StreamTransformer<QuerySnapshot<Map<String, dynamic>>, List<HomePhoneModel>>
-    documentToHomePhonesTransformer = StreamTransformer<
-            QuerySnapshot<Map<String, dynamic>>,
-            List<HomePhoneModel>>.fromHandlers(
-        handleData: (QuerySnapshot<Map<String, dynamic>> snapShot,
-            EventSink<List<HomePhoneModel>> sink) {
-  List<HomePhoneModel> result = [];
-  snapShot.docs.forEach((element) {
-    FirestoreService.getHomePhones(element.id).then((value) {
-      if (value != null) {
-        result.add(HomePhoneModel(
-          address: value['address'],
-          code: value['code'],
-        ));
-        sink.add(result = List.from(result.reversed));
-      }
-    });
-  });
-  sink.add(result = List.from(result.reversed));
-});
-
 /// The state for DetailsScreen
 class NoteApartmentsScreenState extends State<NoteApartmentsScreen> {
   @override
@@ -56,28 +34,7 @@ class NoteApartmentsScreenState extends State<NoteApartmentsScreen> {
       appBar: AppBar(
         title: Text('Квартиры - Список квартир'),
       ),
-      body: StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('homePhones')
-              .snapshots()
-              .transform(documentToHomePhonesTransformer),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data != null) {
-                return _streamChatsWidget(context, snapshot.data);
-              } else {
-                return _emptyMessage();
-              }
-            }
-            if (snapshot.hasError) {
-              return Text('Произошла ошибка загрузки: ${snapshot.error}');
-            }
-            return Container(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }),
+      body: _emptyMessage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
@@ -93,67 +50,11 @@ class NoteApartmentsScreenState extends State<NoteApartmentsScreen> {
   }
 }
 
-Widget _streamChatsWidget(context, List<HomePhoneModel> homephonesList) {
-  if (homephonesList.length == 0) {
-    return _emptyMessage();
-  } else
-    return ListView.builder(
-        itemCount: homephonesList.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Container(
-            decoration:
-                BoxDecoration(border: Border.all(color: Colors.grey, width: 1)),
-            child: Row(
-              //mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(
-                        //
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            child: Text(
-                          '${homephonesList[index].address}',
-                          textAlign: TextAlign.center,
-                        )),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2 - 2,
-                  child: Column(
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              child: Text('${homephonesList[index].code}',
-                                  textAlign: TextAlign.center))),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-}
-
 Widget _emptyMessage() {
   return Center(
     child: Container(
       child: Text(
-        'Домофонов нет',
+        'Квартир нет',
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 14.0),
       ),
