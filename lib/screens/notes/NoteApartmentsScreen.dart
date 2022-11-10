@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:beamer/beamer.dart';
 import 'package:rent_application/models/HomePhoneModel.dart';
 import 'package:rent_application/repository/firestore_srevice.dart';
+import 'package:rent_application/screens/notes/AddApartmentsForm.dart';
 import 'package:rent_application/screens/notes/AddHomePhoneForm.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -37,9 +38,16 @@ class NoteApartmentsScreenState extends State<NoteApartmentsScreen> {
       body: _emptyMessage(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          DocumentReference ref =
+              FirebaseFirestore.instance.collection('apartments').doc();
+          print('Идентификатор квартиры: ${ref.id}');
+          FirestoreService.addApartment('', '', '', ref.id);
           setState(() {
             showDialog(
-                context: context, builder: (context) => AddHomePhoneForm());
+                context: context,
+                builder: (context) => AddApartmentsForm(
+                      uid: ref.id,
+                    ));
           });
         },
         //Beamer.of(context).beamToNamed(widget.detailsHomePhonePath),

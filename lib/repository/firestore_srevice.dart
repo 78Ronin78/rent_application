@@ -36,11 +36,43 @@ class FirestoreService {
     return doc.data();
   }
 
-  // Добавление фото на модерацию , создание ссылки на фото
-  static Future<void> addPhotoInValid(
-      DateTime date, String url, String appartmentUid) async {
+  static Future<void> addApartment(
+      String address, String number, String photoUrl, String id) async {
     DocumentReference ref =
-        FirebaseFirestore.instance.collection('loadPhoto').doc();
-    ref.set({'date': date, 'uid': appartmentUid, 'url': url, 'id': ref.id});
+        FirebaseFirestore.instance.collection('apartments').doc(id);
+    ref.set({
+      'id': id,
+      'address': address,
+      'number': number,
+      'mainPhoto': photoUrl
+    });
+  }
+
+  // Добавление аватара на модерацию
+  static Future<void> addMainPhotoValid(
+      DateTime date, String url, String uid) async {
+    DocumentReference ref =
+        FirebaseFirestore.instance.collection("apartments").doc();
+    ref.set({
+      'date': date,
+      'uid': uid,
+      'url': url,
+      'id': ref.id,
+    });
+  }
+
+  static Future getApartments(String id) async {
+    DocumentSnapshot doc =
+        await FirebaseFirestore.instance.collection('apartments').doc(id).get();
+    return doc.data();
+  }
+
+  // Добавление фото на модерацию , создание ссылки на фото
+  static Future<void> getPhotoByApartment(
+      DateTime date, String url, String appartmentUid) async {
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection('apartments')
+        .doc(appartmentUid)
+        .get();
   }
 }
