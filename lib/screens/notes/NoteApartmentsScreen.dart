@@ -46,7 +46,6 @@ StreamTransformer<QuerySnapshot<Map<String, dynamic>>, List<ApartmentModel>>
           validPhoto: value['validPhoto'],
         ));
         sink.add(result = List.from(result.reversed));
-        print('Результат $result');
       }
     });
   });

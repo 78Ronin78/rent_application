@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AddApartmentsForm extends StatefulWidget {
   final String uid;
@@ -251,31 +252,36 @@ class _AddApartmentsFormState extends State<AddApartmentsForm> {
                             top: 5,
                             right: 5,
                             child: InkWell(
-                              onTap: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => SimpleDialog(
-                                          title:
-                                              Text('Загрузить изображение из'),
-                                          children: [
-                                            SimpleDialogOption(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                _getImageAvatar(
-                                                    ImageSource.gallery);
-                                              },
-                                              child: Text('Галерея'),
-                                            ),
-                                            SimpleDialogOption(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                _getImageAvatar(
-                                                    ImageSource.camera);
-                                              },
-                                              child: Text('Камера'),
-                                            )
-                                          ],
-                                        ));
+                              onTap: () async {
+                                await Permission.camera.request();
+                                var status = await Permission.microphone.status;
+                                print('Статус доступа: ${status.isGranted}');
+                                if (status.isRestricted) {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (context) => SimpleDialog(
+                                            title: Text(
+                                                'Загрузить изображение из'),
+                                            children: [
+                                              SimpleDialogOption(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  _getImageAvatar(
+                                                      ImageSource.gallery);
+                                                },
+                                                child: Text('Галерея'),
+                                              ),
+                                              SimpleDialogOption(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  _getImageAvatar(
+                                                      ImageSource.camera);
+                                                },
+                                                child: Text('Камера'),
+                                              )
+                                            ],
+                                          ));
+                                }
                               },
                               child: Container(
                                 padding: EdgeInsets.symmetric(vertical: 15),

@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rent_application/helpers/firebase_constants.dart';
 import 'package:rent_application/helpers/message_exception.dart';
+import 'package:rent_application/models/ProfileModel.dart';
 import 'package:rent_application/screens/RegisterAccountScreen.dart';
 import 'package:rent_application/screens/TabNavigator.dart';
 
@@ -178,10 +179,12 @@ class FireBaseAuth {
   }
 
   _redirectAuthUser(BuildContext context) async {
-    DocumentSnapshot documentSnapshot =
+    DocumentSnapshot<Map<dynamic, dynamic>> documentSnapshot =
         await fbFirestore.collection('users').doc(_auth.currentUser!.uid).get();
     var user;
     if (documentSnapshot != null && documentSnapshot.exists) {
+      user = ProfileModel.fromJson(
+          documentSnapshot.data() as Map<String, dynamic>);
       if (user.name != null) {
         Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => TabNavigator()),
