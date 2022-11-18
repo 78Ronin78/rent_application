@@ -58,6 +58,8 @@ dev_dependencies:
   multi_image_picker: ^4.7.15
   cached_network_image: ^2.5.1
   image_picker: ^0.8.6
+  sqflite: any
+  path_provider: any
   permission_handler: ^10.2.0
 
   #firebase dependecies
